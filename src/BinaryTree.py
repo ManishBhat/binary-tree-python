@@ -52,10 +52,10 @@ class BinaryTree():
             else:
                 if currentNode.left is None:
                     currentNode.left = Node(val)
+                    currentNode.left.parent = currentNode
                     return True
                 else:
                     currentNode = currentNode.left
-                    currentNode.left.parent = currentNode
 
     def insert_arr(self, val_arr=[]):
         """Will add an array of values into the binary tree."""
@@ -77,5 +77,5 @@ class BinaryTree():
         else:
             print(spacing + str(tree_node.val))
             spacing += "  "
-            self.displayTree(tree_node.left, spacing)
-            self.displayTree(tree_node.right, spacing)
+            self.display_tree(tree_node.left, spacing)
+            self.display_tree(tree_node.right, spacing)
