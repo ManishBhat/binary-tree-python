@@ -15,6 +15,23 @@ class Node:
         self.left = None
         self.right = None
 
+    def is_leaf_node(self):
+        """Returns True if the node is a leaf node(i.e. no children)."""
+        if self is None:
+            return False
+        if self.left is None and self.right is None:
+            return True
+        return False
+
+    def node_type(self):
+        if self is None:
+            return "None"  # Empty
+        if self.parent is None:
+            return "Root"  # Root Node
+        if self.parent.val< self.val: 
+            return "Right" # Right node (as larger numbers to right).
+        else:
+            return "Left"
 
 class BinaryTree():
     """
@@ -79,3 +96,68 @@ class BinaryTree():
             spacing += "  "
             self.display_tree(tree_node.left, spacing)
             self.display_tree(tree_node.right, spacing)
+
+    def search(self, val):
+        """Searches number in binary tree."""
+        currentNode = self.rootNode
+        while True:
+            if currentNode is None:
+                print("Number not found.")
+                return None
+            elif currentNode.val == val:
+                print("Number found.")
+                return currentNode
+            elif currentNode.val < val:
+                currentNode = currentNode.right
+            else:
+                currentNode = currentNode.left
+
+    def delete(self, val):
+        """
+        Deletes number from binary tree.
+        
+        This function hasn't been implemented for case 3.
+        Clearly iteration isn't the way to go for binary search trees.
+        The code is a horror to look at :(
+        I have to find the inorder successor to this code now. Do deletion of
+        inorder successor in a while loop.
+        Write function for that and then, ultimately do a while loop to carry out deletion.
+        Obviously a loop is needed as deletion is a log(N) operation. Therefore, I have
+        to re-write everything with a loop! :(
+        """
+        # We will be searching the bianry tree for the value.
+        del_node = self.search(val)  # Node to be deleted.
+        if del_node is None:  # This means that the value wasn't found.
+            return False  # Deletion not done
+        # Case 1: Leaf Node is being deleted (the simplest case).
+        elif del_node.is_leaf_node() is True:
+            if del_node.node_type() == "Left":
+                del_node.parent.left = None
+            elif del_node.node_type == "Right": 
+                del_node.parent.left = None
+            else:
+                print("Weird bug in delete, God help us!")
+            return True  # Deletion done
+            del(del_node)
+        # Case 2: Node with one child
+        elif del_node.left is None or del_node.right is None:
+            store_node = None
+            if del_node.left is None:
+                store_node = del_node.right
+            else:
+                store_node = del_node.left
+
+            if del_node.node_type() == "Root":
+                self.rootNode = store_node
+                del(del_node)
+            elif del_node.node_type() == "Left":
+                del_node.parent.left = store_node
+                del(del_node)
+            elif del_node.node_type() == "Right":
+                del_node.parent.right = store_node
+                del(del_node)
+            else:
+                print("Weird bug 2 in delete, God help us!")
+        # Case 3: Node with 2 children
+        
+        
