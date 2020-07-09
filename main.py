@@ -21,8 +21,15 @@ print(mynode.parent.val)
 print()
 
 print("TESTING DELETION")
+
 a.delete(4.5)
 a.display_tree(a.rootNode)
 
 a.delete(9)
+a.display_tree(a.rootNode)
+
+a.delete(6)
+a.display_tree(a.rootNode)
+
+a.delete(4)
 a.display_tree(a.rootNode)

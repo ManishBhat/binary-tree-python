@@ -28,10 +28,13 @@ class Node:
             return "None"  # Empty
         if self.parent is None:
             return "Root"  # Root Node
-        if self.parent.val< self.val: 
+        if self.parent.right is self: 
             return "Right" # Right node (as larger numbers to right).
-        else:
+        elif self.parent.left is self:
             return "Left"
+        else:
+            print("node_type has a bug")
+            return None
 
 class BinaryTree():
     """
@@ -96,7 +99,19 @@ class BinaryTree():
             spacing += "  "
             self.display_tree(tree_node.left, spacing)
             self.display_tree(tree_node.right, spacing)
-
+    
+    def min_node(self, root_node):
+        if root_node is None:
+            print("ERROR: You gave null tree! Can't find min_value")
+            return None
+        while True:
+            if root_node.left is None:
+                return root_node
+            else:
+                root_node = root_node.left
+                
+    
+    
     def search(self, val):
         """Searches number in binary tree."""
         currentNode = self.rootNode
@@ -116,48 +131,52 @@ class BinaryTree():
         """
         Deletes number from binary tree.
         
-        This function hasn't been implemented for case 3.
-        Clearly iteration isn't the way to go for binary search trees.
-        The code is a horror to look at :(
-        I have to find the inorder successor to this code now. Do deletion of
-        inorder successor in a while loop.
-        Write function for that and then, ultimately do a while loop to carry out deletion.
-        Obviously a loop is needed as deletion is a log(N) operation. Therefore, I have
-        to re-write everything with a loop! :(
+        Clearly iteration is unintutive for binary search trees.
+        The code is not pretty to look at :(
+        
+        Seems to work but there could be bugs in the code! :(
         """
         # We will be searching the bianry tree for the value.
         del_node = self.search(val)  # Node to be deleted.
         if del_node is None:  # This means that the value wasn't found.
             return False  # Deletion not done
-        # Case 1: Leaf Node is being deleted (the simplest case).
-        elif del_node.is_leaf_node() is True:
-            if del_node.node_type() == "Left":
-                del_node.parent.left = None
-            elif del_node.node_type == "Right": 
-                del_node.parent.left = None
-            else:
-                print("Weird bug in delete, God help us!")
-            return True  # Deletion done
-            del(del_node)
-        # Case 2: Node with one child
-        elif del_node.left is None or del_node.right is None:
-            store_node = None
-            if del_node.left is None:
-                store_node = del_node.right
-            else:
-                store_node = del_node.left
+        self.no_of_Nodes -= 1
+        while True:
+            # Case 1: Leaf Node is being deleted (the simplest case).
 
-            if del_node.node_type() == "Root":
-                self.rootNode = store_node
+            if del_node.is_leaf_node() is True:
+                if del_node.node_type() == "Left":
+                    del_node.parent.left = None
+                elif del_node.node_type == "Right": 
+                    del_node.parent.left = None
+                else:
+                    print("Weird bug in delete, God help us!")
                 del(del_node)
-            elif del_node.node_type() == "Left":
-                del_node.parent.left = store_node
+                return True  # Deletion done
+            # Case 2: Node with one child
+            elif del_node.left is None or del_node.right is None:
+                store_node = None
+                if del_node.left is None:
+                    store_node = del_node.right
+                else:
+                    store_node = del_node.left
+    
+                if del_node.node_type() == "Root":
+                    self.rootNode = store_node
+                elif del_node.node_type() == "Left":
+                    del_node.parent.left = store_node
+                elif del_node.node_type() == "Right":
+                    del_node.parent.right = store_node
+                else:
+                    print("Weird bug 2 in delete, God help us!")
                 del(del_node)
-            elif del_node.node_type() == "Right":
-                del_node.parent.right = store_node
-                del(del_node)
+                return True
+            # Case 3: Node with 2 children
+            elif del_node.left is not None and del_node.right is not None:
+                inorder_suc = del_node.right
+                inorder_suc = self.min_node(inorder_suc) # Finding inorder successor.
+                del_node.val = inorder_suc.val # Replacing value of node to be deleted with successor's.
+                del_node = inorder_suc # Deleting successor node
             else:
-                print("Weird bug 2 in delete, God help us!")
-        # Case 3: Node with 2 children
-        
-        
+                print("Weird bug 3 in delete, God help us!")
+            print('Hello')
